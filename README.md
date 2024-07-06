@@ -1,6 +1,6 @@
 # Goldfish
 
 
-![Goldfish Logo](https://github.com/YOUR_USERNAME/YOUR_REPOSITORY/raw/main/Goldfish_Logo.jpg)
+![Goldfish Logo](GUEST_3122d295-15ad-4914-8367-8817a19c6504.jpg)
 
 
