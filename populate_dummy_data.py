@@ -1,7 +1,17 @@
-from pydantic import BaseModel, Field, EmailStr
-from typing import List, Dict, Any
+from dotenv import load_dotenv
+import os
+
+from pymongo import MongoClient
 from bson import ObjectId
 from datetime import datetime
+
+import sys
+sys.path.append("./db_schemas")
+
+from graph_map import GraphMap
+from process_step import ProcessStep
+
+load_dotenv()
 
 
 # Example usage
@@ -34,5 +44,15 @@ example_process_inst = [{
 graph_map = GraphMap(**example_graph_inst)
 process_steps = [ProcessStep(**process) for process in example_process_inst]
 
-print(graph_map.json())
-print([process.json() for process in process_steps])
+database_url = os.getenv('DATABASE_URL')
+
+client = MongoClient(database_url)
+
+db = client.Goldfish
+graph_collection = db.graph_map
+process_collection = db.process_step
+
+
+
+graph_collection.insert_one(example_graph_inst)
+process_collection.insert_many([process.dict() for process in process_steps])
