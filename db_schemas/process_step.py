@@ -35,6 +35,7 @@ class ProcessStep(BaseModel):
     parent_graph: str
     meta_data: Dict[str, Any]
     elastic_data_paths: Dict[str, Any]
+    file_location_type: str
     date_created: datetime
     date_updated: datetime
 

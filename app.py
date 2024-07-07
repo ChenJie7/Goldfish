@@ -21,11 +21,12 @@ Date: 07/06/2024
 
 from fastapi import FastAPI, HTTPException
 from CRUD import *
+import json
 
 # meta data for autodocumentation
 tags_metadata = [
     {
-        "name": "Graph Read Operation",
+        "name": "Graph Read Operations",
         "description": "Endpoints that relate to reading from the graph collection",
     },
     {
@@ -37,93 +38,71 @@ tags_metadata = [
 # generate app instance
 app = FastAPI()
 
-@app.get("/CRUD/read/graph_id/{item_id}", tags=["Graph Read Operation"])
-async def read_graph_data_from_id(item_id: str):
+@app.get("/CRUD/read/graph_instance/{filter}", tags=["Graph Read Operations"])
+async def read_graph_instance(filter: str):
     """
-    Endpoint to read graph data by ID.
+    search database and return specific match to input filter
+
+    **Parameters:**
+    - **filter**: Filter to be applied to the data.
+
+    **Returns:**
+    - A graph document if found, otherwise raises a 404 HTTP exception.
+    """
     
-    :param item_id: The ID of the graph document to retrieve.
-    :return: The graph document if found, otherwise raises a 404 HTTP exception.
-    """
-    result = pull_graph_id(item_id)
+    result = pull_graph_instance(json.loads(filter))
     if not result:
         raise HTTPException(status_code=404, detail="Graph not found")
     return {"result": result}
 
-@app.get("/CRUD/read/graph_name/{project_name}", tags=["Graph Read Operation"])
-async def read_graph_data_from_project_name(project_name: str):
+@app.get("/CRUD/read/graph_collection/{filter}", tags=["Graph Read Operations"])
+async def read_graph_collection(filter: str):
     """
-    Endpoint to read graph data by project name.
+    search entire database and return all found matches to the filter
+
+    **Parameters:**
+    - **filter**: Filter to be applied to the data.
+
+    **Returns:**
+    - A list of graph documents if found, otherwise raises a 404 HTTP exception.
+    """
     
-    :param project_name: The project name of the graph document to retrieve.
-    :return: The graph document if found, otherwise raises a 404 HTTP exception.
-    """
-    result = pull_graph_project_name(project_name)
+    result = pull_graph_collection(json.loads(filter))
     if not result:
         raise HTTPException(status_code=404, detail="Graph not found")
     return {"result": result}
 
-@app.get("/CRUD/read/graph_owner/{owner}", tags=["Graph Read Operation"])
-async def read_graph_data_from_owner(owner: str):
-    """
-    Endpoint to read graph data by owner's name.
-    
-    :param owner: The name of the owner.
-    :return: A list of graph documents owned by the specified owner, otherwise raises a 404 HTTP exception.
-    """
-    result = pull_graphs_owner(owner)
-    if not result:
-        raise HTTPException(status_code=404, detail="Graphs not found")
-    return {"result": result}
 
-@app.get("/CRUD/read/graph_email/{email}", tags=["Graph Read Operation"])
-async def read_graph_data_from_email(email: str):
-    """
-    Endpoint to read graph data by owner's email.
-    
-    :param email: The email of the owner.
-    :return: A list of graph documents owned by the specified email, otherwise raises a 404 HTTP exception.
-    """
-    result = pull_graphs_email(email)
-    if not result:
-        raise HTTPException(status_code=404, detail="Graphs not found")
-    return {"result": result}
 
-@app.get("/CRUD/read/process_id/{id}", tags=["Process Read Operations"])
-async def read_process_data_from_id(id: str):
+@app.get("/CRUD/read/process_instance/{filter}", tags=["Process Read Operations"])
+async def read_process_instance(filter: str):
     """
-    Endpoint to read process data by ID.
+    search database and return specific match to input filter
+
+    **Parameters:**
+    - **filter**: Filter to be applied to the data.
+
+    **Returns:**
+    - A graph document if found, otherwise raises a 404 HTTP exception.
+    """
     
-    :param id: The ID of the process document to retrieve.
-    :return: The process document if found, otherwise raises a 404 HTTP exception.
-    """
-    result = pull_process_id(id)
+    result = pull_process_instance(json.loads(filter))
     if not result:
         raise HTTPException(status_code=404, detail="Process not found")
     return {"result": result}
 
-@app.get("/CRUD/read/process_parent/{parent_graph}", tags=["Process Read Operations"])
-async def read_process_data_from_parent_graph(parent_graph: str):
+@app.get("/CRUD/read/process_collection/{filter}", tags=["Process Read Operations"])
+async def read_process_collection(filter: str):
     """
-    Endpoint to read process data by parent graph ID.
-    
-    :param parent_graph: The ID of the parent graph.
-    :return: A list of process documents associated with the specified parent graph, otherwise raises a 404 HTTP exception.
-    """
-    result = pull_processes_parent_graph(parent_graph)
-    if not result:
-        raise HTTPException(status_code=404, detail="Processes not found")
-    return {"result": result}
+    search entire database and return all found matches to the filter
 
-@app.get("/CRUD/read/process_data_type/{data_key}", tags=["Process Read Operations"])
-async def read_process_data_from_meta_data_tag(data_key: str):
+    **Parameters:**
+    - **filter**: Filter to be applied to the data.
+
+    **Returns:**
+    - A list of graph documents if found, otherwise raises a 404 HTTP exception.
     """
-    Endpoint to read process data by a specific key in the elastic_data_paths dictionary.
-    
-    :param data_key: The key to search for in the elastic_data_paths dictionary.
-    :return: A list of process documents that contain the specified key, otherwise raises a 404 HTTP exception.
-    """
-    result = pull_processes_data_type(data_key)
+    result = pull_process_collection(json.loads(filter))
     if not result:
-        raise HTTPException(status_code=404, detail="Processes not found")
+        raise HTTPException(status_code=404, detail="Graph not found")
     return {"result": result}

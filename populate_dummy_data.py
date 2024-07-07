@@ -63,6 +63,7 @@ example_process_inst = [{
     "elastic_data_paths": {
         "pdb": ["/some_path1.pdb", "/some_path2.pdb", "/some_path3.pdb"]
     },
+    "file_location_type": "digs_local",
     "date_created": time_stamp,
     "date_updated": time_stamp
 } for i in range(len(process_step_IDs))]
@@ -80,6 +81,9 @@ db = client.Goldfish
 graph_collection = db.graph_map
 process_collection = db.process_step
 
+
+
+
 # push data to database
-graph_collection.insert_one(example_graph_inst)
+graph_collection.insert_one(graph_map.dict())
 process_collection.insert_many([process.dict() for process in process_steps])

@@ -50,6 +50,24 @@ process_collection = db.process_step
 
 # Read Graph Data 
 
+def pull_graph_instance(filter):
+	"""
+	Pull a specific document with specific filter.
+
+	:param filter: filter to apply to database.
+	:return: The graph document if found, otherwise None.
+	"""
+	return graph_collection.find_one(filter)
+
+def pull_graph_collection(filter):
+	"""
+	Pull a collection of graphs under specific filter.
+
+	:param filter: filter to apply to database.
+	:return: The graph document if found, otherwise None.
+	"""
+	return list(graph_collection.find(filter))
+
 def pull_graph_id(ID:str):
 	"""
 	Pull a graph document by its ID.
@@ -94,8 +112,30 @@ def pull_graphs_email(email:str):
 	if result:
 		return result
 
+# Update Graph Data 
+# Delete Graph Data 
+# Create Graph Data 
+
 
 # Read Process Data 
+
+def pull_process_instance(filter):
+	"""
+	Pull a specific document with specific filter.
+
+	:param filter: filter to apply to database.
+	:return: The graph document if found, otherwise None.
+	"""
+	return process_collection.find_one(filter)
+
+def pull_process_collection(filter):
+	"""
+	Pull a collection of graphs under specific filter.
+
+	:param filter: filter to apply to database.
+	:return: The graph document if found, otherwise None.
+	"""
+	return list(process_collection.find(filter))
 
 def pull_process_id(ID:str):
 	"""
@@ -135,6 +175,21 @@ def pull_processes_data_type(data_key:str):
 	if result:
 		return result
 
+def pull_processes_file_location_type(file_location_type:str):
+	"""
+	Pull all process data contained in a catigory of file location
+
+	:param file_location: process location type (embedded, digs_local, pool).
+	:return: A list of process documents stored in a storage catigory.
+	"""
+	result = list(process_collection.find({"file_location_type" : file_location_type}))
+	if result:
+		return result
+
+
+# Update Process Data 
+# Delete Process Data 
+# Create Process Data 
 
 
 
