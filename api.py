@@ -21,7 +21,7 @@ Date: 07/06/2024
 
 from fastapi import FastAPI, HTTPException
 from CRUD_utils import *
-import json
+import json 
 
 from routes.crud import crud_router
 
