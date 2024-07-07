@@ -1,0 +1,5 @@
+## Project Overview
+
+The **Goldfish Project** aims to provide a better way to accumulate protein data for closed-loop protein design. It was authored by Max Witwer, Jie Chen, and Elliot Cole. This initiative is a collaborative effort with the Baker Lab and was developed during an internship at the Institute for Protein Design. 
+
+![Sample Image](https://upload.wikimedia.org/wikipedia/commons/thumb/2/25/Common_goldfish.JPG/440px-Common_goldfish.JPG)

@@ -1,44 +1,11 @@
-"""
--------------------------------------------------------------------
-This is a Goldfish Project File
-
-Authors: Max Witwer, Jie Chen, Elliot Cole
-Collaboration with the Baker Lab
-
-This file was generated during an internship at the institute for
-protein design
-
-Description:
-This file contains all FastAPI endpoints that allow for querying 
-the database. It provides read operations for graph and process 
-collections within the MongoDB database, enabling CRUD functionality 
-via HTTP requests. The endpoints are categorized for better 
-documentation and ease of use.
-
-Date: 07/06/2024
--------------------------------------------------------------------
-"""
-
-from fastapi import FastAPI, HTTPException
-from CRUD import *
+# routes.py
+from fastapi import APIRouter, HTTPException
+from CRUD_utils import *
 import json
 
-# meta data for autodocumentation
-tags_metadata = [
-    {
-        "name": "Graph Read Operation",
-        "description": "Endpoints that relate to reading from the graph collection",
-    },
-    {
-        "name": "Process Read Operations",
-        "description": "Endpoints that relate to reading from the process collection",
-    }
-]
+crud_router = APIRouter()
 
-# generate app instance
-app = FastAPI()
-
-@app.get("/CRUD/read/graph_instance/{filter}", tags=["Graph Read Operations"])
+@crud_router.get("/CRUD/read/graph_instance/{filter}", tags=["General Graph Read Operations"])
 async def read_graph_instance(filter: str):
     """
     search database and return specific match to input filter
@@ -55,7 +22,7 @@ async def read_graph_instance(filter: str):
         raise HTTPException(status_code=404, detail="Graph not found")
     return {"result": result}
 
-@app.get("/CRUD/read/graph_collection/{filter}", tags=["Graph Read Operations"])
+@crud_router.get("/CRUD/read/graph_collection/{filter}", tags=["General Graph Read Operations"])
 async def read_graph_collection(filter: str):
     """
     search entire database and return all found matches to the filter
@@ -72,7 +39,7 @@ async def read_graph_collection(filter: str):
         raise HTTPException(status_code=404, detail="Graph not found")
     return {"result": result}
 
-@app.get("/CRUD/read/graph_id/{item_id}", tags=["Graph Read Operations"])
+@crud_router.get("/CRUD/read/graph_id/{item_id}", tags=["Specific Graph Read Operations"])
 async def read_graph_data_from_id(item_id: str):
     """
     Endpoint to read graph data by ID.
@@ -88,7 +55,7 @@ async def read_graph_data_from_id(item_id: str):
         raise HTTPException(status_code=404, detail="Graph not found")
     return {"result": result}
 
-@app.get("/CRUD/read/graph_name/{project_name}", tags=["Graph Read Operations"])
+@crud_router.get("/CRUD/read/graph_name/{project_name}", tags=["Specific Graph Read Operations"])
 async def read_graph_data_from_project_name(project_name: str):
     """
     Endpoint to read graph data by owner's name.
@@ -104,7 +71,7 @@ async def read_graph_data_from_project_name(project_name: str):
         raise HTTPException(status_code=404, detail="Graph not found")
     return {"result": result}
 
-@app.get("/CRUD/read/graph_owner/{owner}", tags=["Graph Read Operations"])
+@crud_router.get("/CRUD/read/graph_owner/{owner}", tags=["Specific Graph Read Operations"])
 async def read_graph_data_from_owner(owner: str):
     """
     Endpoint to read graph data by owner's name.
@@ -117,7 +84,7 @@ async def read_graph_data_from_owner(owner: str):
         raise HTTPException(status_code=404, detail="Graphs not found")
     return {"result": result}
 
-@app.get("/CRUD/read/graph_email/{email}", tags=["Graph Read Operations"])
+@crud_router.get("/CRUD/read/graph_email/{email}", tags=["Specific Graph Read Operations"])
 async def read_graph_data_from_email(email: str):
     """
     Endpoint to read graph data by owner's email.
@@ -133,7 +100,7 @@ async def read_graph_data_from_email(email: str):
         raise HTTPException(status_code=404, detail="Graphs not found")
     return {"result": result}
 
-@app.get("/CRUD/read/process_instance/{filter}", tags=["Process Read Operations"])
+@crud_router.get("/CRUD/read/process_instance/{filter}", tags=["General Process Read Operations"])
 async def read_process_instance(filter: str):
     """
     search database and return specific match to input filter
@@ -150,7 +117,7 @@ async def read_process_instance(filter: str):
         raise HTTPException(status_code=404, detail="Process not found")
     return {"result": result}
 
-@app.get("/CRUD/read/process_collection/{filter}", tags=["Process Read Operations"])
+@crud_router.get("/CRUD/read/process_collection/{filter}", tags=["General Process Read Operations"])
 async def read_process_collection(filter: str):
     """
     search entire database and return all found matches to the filter
@@ -166,7 +133,7 @@ async def read_process_collection(filter: str):
         raise HTTPException(status_code=404, detail="Graph not found")
     return {"result": result}
 
-@app.get("/CRUD/read/process_id/{id}", tags=["Process Read Operations"])
+@crud_router.get("/CRUD/read/process_id/{id}", tags=["Specific Process Read Operations"])
 async def read_process_data_from_id(id: str):
     """
     Endpoint to read process data by ID.
@@ -182,7 +149,7 @@ async def read_process_data_from_id(id: str):
         raise HTTPException(status_code=404, detail="Process not found")
     return {"result": result}
 
-@app.get("/CRUD/read/process_parent/{parent_graph}", tags=["Process Read Operations"])
+@crud_router.get("/CRUD/read/process_parent/{parent_graph}", tags=["Specific Process Read Operations"])
 async def read_process_data_from_parent_graph(parent_graph: str):
     """
     Endpoint to read process data by parent graph ID.
@@ -198,7 +165,7 @@ async def read_process_data_from_parent_graph(parent_graph: str):
         raise HTTPException(status_code=404, detail="Processes not found")
     return {"result": result}
 
-@app.get("/CRUD/read/process_data_type/{data_key}", tags=["Process Read Operations"])
+@crud_router.get("/CRUD/read/process_data_type/{data_key}", tags=["Specific Process Read Operations"])
 async def read_process_data_from_meta_data_tag(data_key: str):
     """
     Endpoint to read process data by a specific key in the elastic_data_paths dictionary.
@@ -214,7 +181,7 @@ async def read_process_data_from_meta_data_tag(data_key: str):
         raise HTTPException(status_code=404, detail="Processes not found")
     return {"result": result}
 
-@app.get("/CRUD/read/process_file_location_type/{file_location}", tags=["Process Read Operations"])
+@crud_router.get("/CRUD/read/process_file_location_type/{file_location}", tags=["Specific Process Read Operations"])
 async def read_process_data_from_file_location_type(file_location_type: str):
     """
     Endpoint to read process data by a specific data location category.
@@ -234,3 +201,4 @@ async def read_process_data_from_file_location_type(file_location_type: str):
     if not result:
         raise HTTPException(status_code=404, detail="Processes not found")
     return {"result": result}
+
