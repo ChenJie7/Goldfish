@@ -50,6 +50,10 @@ tags_metadata = [
     {
         "name": "Specific Graph Delete Operations",
         "description": "Endpoints that delete specfic graph documents",
+    },
+    {
+        "name": "Specific Process Update Operations",
+        "description": "Endpoints that update specfic graph documents",
     }
 ]
 docs_text = open('display_text.txt', 'r').read()

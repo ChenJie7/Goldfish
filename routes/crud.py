@@ -5,7 +5,7 @@ import json
 
 crud_router = APIRouter()
 
-@crud_router.post("/CRUD/read/graph_instance/{filter}", tags=["General Graph Read Operations"])
+@crud_router.post("/CRUD/read/graph_instance/", tags=["General Graph Read Operations"])
 async def read_graph_instance(filter: str):
     """
     search database and return specific match to input filter
@@ -22,7 +22,7 @@ async def read_graph_instance(filter: str):
         raise HTTPException(status_code=404, detail="Graph not found")
     return {"result": result}
 
-@crud_router.post("/CRUD/read/graph_collection/{filter}", tags=["General Graph Read Operations"])
+@crud_router.post("/CRUD/read/graph_collection/", tags=["General Graph Read Operations"])
 async def read_graph_collection(filter: str):
     """
     search entire database and return all found matches to the filter
@@ -100,7 +100,7 @@ async def read_graph_data_from_email(email: str):
         raise HTTPException(status_code=404, detail="Graphs not found")
     return {"result": result}
 
-@crud_router.post("/CRUD/read/process_instance/{filter}", tags=["General Process Read Operations"])
+@crud_router.post("/CRUD/read/process_instance/", tags=["General Process Read Operations"])
 async def read_process_instance(filter: str):
     """
     search database and return specific match to input filter
@@ -117,7 +117,7 @@ async def read_process_instance(filter: str):
         raise HTTPException(status_code=404, detail="Process not found")
     return {"result": result}
 
-@crud_router.post("/CRUD/read/process_collection/{filter}", tags=["General Process Read Operations"])
+@crud_router.post("/CRUD/read/process_collection/", tags=["General Process Read Operations"])
 async def read_process_collection(filter: str):
     """
     search entire database and return all found matches to the filter
@@ -252,5 +252,27 @@ async def delete_processes_from_parent_id(parent_id: str):
         raise HTTPException(status_code=404, detail="Processes not found")
     return {"result": result}
 
+
+
+
+@crud_router.post("/CRUD/update/process_meta_data/{id}", tags=["Specific Process Update Operations"])
+async def update_process_data_meta_data(updated_instance:Process_update_meta_data_schema):
+    """
+    """
+    updated_meta_data = updated_instance.dict()
+    result = update_process_meta_data(**updated_meta_data)
+    if not result:
+        raise HTTPException(status_code=404, detail="Processes not found")
+    return {"result": result}
+
+# @crud_router.post("/CRUD/update/process_dynamic_file_paths/{id}", tags=["Specific Process Update Operations"])
+# async def update_process_dynamic_file_paths(updated_instance:Process_update_elastic_data_paths_schema):
+#     """
+#     """
+#     updated_meta_data = updated_instance.dict()
+#     result = update_process_meta_data(**updated_meta_data)
+#     if not result:
+#         raise HTTPException(status_code=404, detail="Processes not found")
+#     return {"result": result}
 
 

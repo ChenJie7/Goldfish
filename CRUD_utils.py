@@ -34,6 +34,7 @@ sys.path.append("./db_schemas")
 
 from graph_map import GraphMap
 from process_step import ProcessStep
+from crud_models import *
 
 # load environmental varibles from ".env" file
 load_dotenv()
@@ -209,6 +210,39 @@ def pull_processes_file_location_type(file_location_type:str):
 
 
 # Update Process Data 
+
+def update_process_meta_data(update_id:str, meta_data:dict):
+	# generate timestamp
+	time_stamp = datetime.now()
+
+	# update database
+	result = process_collection.update_one(
+			{"_id":update_id}, 
+			{'$set': {
+				"meta_data":meta_data,
+				"date_updated":time_stamp
+			}}
+		)
+
+	if result.modified_count > 0:
+		return f"item '{update_id}' modified with supplied meta data"
+
+def update_process_dynamic_file_links(update_id:str, elastic_data_paths:dict):
+	# generate timestamp
+	time_stamp = datetime.now()
+
+	# update database
+	result = process_collection.update_one(
+			{"_id":update_id}, 
+			{'$set': {
+				"elastic_data_paths":elastic_data_paths,
+				"date_updated":time_stamp
+			}}
+		)
+
+	if result.modified_count > 0:
+		return f"item '{update_id}' modified with supplied meta data"
+
 # Delete Process Data 
 
 def delete_process(id:str):
@@ -235,8 +269,6 @@ def delete_all_from_parent_graph(parent_graph:str):
 
 
 # Create Process Data 
-
-
 
 
 
