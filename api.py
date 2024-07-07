@@ -42,9 +42,16 @@ tags_metadata = [
     {
         "name": "Specific Process Read Operations",
         "description": "Endpoints that relate to reading from specific process fields",
+    },
+    {
+        "name": "Specific Process Delete Operations",
+        "description": "Endpoints that delete specfic process documents",
+    },
+    {
+        "name": "Specific Graph Delete Operations",
+        "description": "Endpoints that delete specfic graph documents",
     }
 ]
-
 docs_text = open('display_text.txt', 'r').read()
 
 # generate app instance

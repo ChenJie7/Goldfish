@@ -5,7 +5,7 @@ import json
 
 crud_router = APIRouter()
 
-@crud_router.get("/CRUD/read/graph_instance/{filter}", tags=["General Graph Read Operations"])
+@crud_router.post("/CRUD/read/graph_instance/{filter}", tags=["General Graph Read Operations"])
 async def read_graph_instance(filter: str):
     """
     search database and return specific match to input filter
@@ -22,7 +22,7 @@ async def read_graph_instance(filter: str):
         raise HTTPException(status_code=404, detail="Graph not found")
     return {"result": result}
 
-@crud_router.get("/CRUD/read/graph_collection/{filter}", tags=["General Graph Read Operations"])
+@crud_router.post("/CRUD/read/graph_collection/{filter}", tags=["General Graph Read Operations"])
 async def read_graph_collection(filter: str):
     """
     search entire database and return all found matches to the filter
@@ -100,7 +100,7 @@ async def read_graph_data_from_email(email: str):
         raise HTTPException(status_code=404, detail="Graphs not found")
     return {"result": result}
 
-@crud_router.get("/CRUD/read/process_instance/{filter}", tags=["General Process Read Operations"])
+@crud_router.post("/CRUD/read/process_instance/{filter}", tags=["General Process Read Operations"])
 async def read_process_instance(filter: str):
     """
     search database and return specific match to input filter
@@ -117,7 +117,7 @@ async def read_process_instance(filter: str):
         raise HTTPException(status_code=404, detail="Process not found")
     return {"result": result}
 
-@crud_router.get("/CRUD/read/process_collection/{filter}", tags=["General Process Read Operations"])
+@crud_router.post("/CRUD/read/process_collection/{filter}", tags=["General Process Read Operations"])
 async def read_process_collection(filter: str):
     """
     search entire database and return all found matches to the filter
@@ -201,4 +201,56 @@ async def read_process_data_from_file_location_type(file_location_type: str):
     if not result:
         raise HTTPException(status_code=404, detail="Processes not found")
     return {"result": result}
+
+
+@crud_router.get("/CRUD/delete/graph_file_id/{id}", tags=["Specific Graph Delete Operations"])
+async def delete_graph_from_id(id: str):
+    """
+    Endpoint to delete a graph by a specific ID.
+
+    **Parameters:**
+    - **id**: The ID of the graph to delete.
+
+    **Returns:**
+    - A result indicating the success of the deletion, otherwise raises a 404 HTTP exception.
+    """
+    result = delete_graph(id)
+    if not result:
+        raise HTTPException(status_code=404, detail="Processes not found")
+    return {"result": result}    
+
+@crud_router.get("/CRUD/delete/process_file_id/{id}", tags=["Specific Process Delete Operations"])
+async def delete_process_from_id(id: str):
+    """
+    Endpoint to delete a process by a specific ID.
+
+    **Parameters:**
+    - **id**: The ID of the process to delete.
+
+    **Returns:**
+    - A result indicating the success of the deletion, otherwise raises a 404 HTTP exception.
+    """
+    result = delete_process(id)
+    if not result:
+        raise HTTPException(status_code=404, detail="Processes not found")
+    return {"result": result}
+
+
+@crud_router.get("/CRUD/delete/process_partent_id/{parent_id}", tags=["Specific Process Delete Operations"])
+async def delete_processes_from_parent_id(parent_id: str):
+    """
+    Endpoint to delete processes by a specific parent ID.
+
+    **Parameters:**
+    - **parent_id**: The parent ID to delete processes from.
+
+    **Returns:**
+    - A result indicating the success of the deletion, otherwise raises a 404 HTTP exception.
+    """
+    result = delete_all_from_parent_graph(parent_id)
+    if not result:
+        raise HTTPException(status_code=404, detail="Processes not found")
+    return {"result": result}
+
+
 

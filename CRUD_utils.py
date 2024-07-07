@@ -114,6 +114,27 @@ def pull_graphs_email(email:str):
 
 # Update Graph Data 
 # Delete Graph Data 
+
+def delete_graph(id:str):
+	"""
+	Delete a graph document by its unique identifier and 
+	all associated process documents.
+
+	:param id: The unique identifier of the graph document to delete.
+	:return: A message indicating the outcome of the deletion operation, 
+	         including associated processes.
+	"""
+	# Delete the graph document with the specified id
+	graph_result = graph_collection.delete_one({"_id" : f"{id}"})
+
+	# Delete all process documents associated with the specified graph id
+	process_result = delete_all_from_parent_graph(id)
+
+	# Validate results
+	if graph_result.deleted_count > 0 and process_result:
+		return f"item '{id}' and all associated processes deleted"
+
+
 # Create Graph Data 
 
 
@@ -189,6 +210,30 @@ def pull_processes_file_location_type(file_location_type:str):
 
 # Update Process Data 
 # Delete Process Data 
+
+def delete_process(id:str):
+	"""
+	Delete a process document by its unique identifier.
+
+	:param id: The unique identifier of the process document to delete.
+	:return: A message indicating the outcome of the deletion operation.
+	"""
+	result = process_collection.delete_one({"_id" : f"{id}"})
+	if result.deleted_count > 0:
+		return f"item '{id}' deleted"
+
+def delete_all_from_parent_graph(parent_graph:str):
+	"""
+	Delete all process documents associated with a specific parent graph.
+
+	:param parent_graph: The identifier of the parent graph whose associated process documents will be deleted.
+	:return: A message indicating the outcome of the deletion operation.
+	"""
+	result = process_collection.delete_many({"parent_graph" : f"{parent_graph}"})
+	if result.deleted_count > 0:
+		return f"items under '{parent_graph}' graph deleted"
+
+
 # Create Process Data 
 
 
