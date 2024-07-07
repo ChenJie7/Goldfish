@@ -16,7 +16,7 @@ Date: 07/06/2024
 """
 
 from pydantic import BaseModel, Field, EmailStr, root_validator
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Literal
 from datetime import datetime
 
 # Define the data model
@@ -28,3 +28,13 @@ class Process_update_meta_data_schema(BaseModel):
 class Process_update_elastic_data_paths_schema(BaseModel):
     update_id: str
     elastic_data_paths: Dict[str, Any]
+
+# Define the data model
+class Process_update_file_location_type_schema(BaseModel):
+    update_id: str
+    file_location_type: Literal[
+                            'digs_local', 
+                            'pool', 
+                            'embedded', 
+                            'mixed'
+                        ]

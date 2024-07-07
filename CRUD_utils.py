@@ -212,6 +212,13 @@ def pull_processes_file_location_type(file_location_type:str):
 # Update Process Data 
 
 def update_process_meta_data(update_id:str, meta_data:dict):
+	"""
+	Update the metadata of a process document.
+
+	:param update_id: The unique identifier of the process document to update.
+	:param meta_data: The metadata to update in the process document.
+	:return: A message indicating the outcome of the update operation.
+	"""
 	# generate timestamp
 	time_stamp = datetime.now()
 
@@ -227,7 +234,14 @@ def update_process_meta_data(update_id:str, meta_data:dict):
 	if result.modified_count > 0:
 		return f"item '{update_id}' modified with supplied meta data"
 
-def update_process_dynamic_file_links(update_id:str, elastic_data_paths:dict):
+def update_process_elastic_data_paths(update_id:str, elastic_data_paths:dict):
+	"""
+	Update the elastic data paths of a process document.
+
+	:param update_id: The unique identifier of the process document to update.
+	:param elastic_data_paths: The elastic data paths to update in the process document.
+	:return: A message indicating the outcome of the update operation.
+	"""
 	# generate timestamp
 	time_stamp = datetime.now()
 
@@ -236,6 +250,29 @@ def update_process_dynamic_file_links(update_id:str, elastic_data_paths:dict):
 			{"_id":update_id}, 
 			{'$set': {
 				"elastic_data_paths":elastic_data_paths,
+				"date_updated":time_stamp
+			}}
+		)
+
+	if result.modified_count > 0:
+		return f"item '{update_id}' modified with supplied meta data"
+
+def update_process_file_location_type(update_id:str, file_location_type:dict):
+	"""
+	Update the file location type of a process document.
+
+	:param update_id: The unique identifier of the process document to update.
+	:param file_location_type: The file location type to update in the process document.
+	:return: A message indicating the outcome of the update operation.
+	"""
+	# generate timestamp
+	time_stamp = datetime.now()
+
+	# update database
+	result = process_collection.update_one(
+			{"_id":update_id}, 
+			{'$set': {
+				"file_location_type":file_location_type,
 				"date_updated":time_stamp
 			}}
 		)

@@ -255,9 +255,16 @@ async def delete_processes_from_parent_id(parent_id: str):
 
 
 
-@crud_router.post("/CRUD/update/process_meta_data/{id}", tags=["Specific Process Update Operations"])
+@crud_router.post("/CRUD/update/process_meta_data/", tags=["Specific Process Update Operations"])
 async def update_process_data_meta_data(updated_instance:Process_update_meta_data_schema):
     """
+    Endpoint to update process meta data.
+
+    **Parameters:**
+    - **updated_instance**: An instance of Process_update_meta_data_schema containing the updated meta data.
+
+    **Returns:**
+    - A result indicating the success of the update, otherwise raises a 404 HTTP exception.
     """
     updated_meta_data = updated_instance.dict()
     result = update_process_meta_data(**updated_meta_data)
@@ -265,14 +272,38 @@ async def update_process_data_meta_data(updated_instance:Process_update_meta_dat
         raise HTTPException(status_code=404, detail="Processes not found")
     return {"result": result}
 
-# @crud_router.post("/CRUD/update/process_dynamic_file_paths/{id}", tags=["Specific Process Update Operations"])
-# async def update_process_dynamic_file_paths(updated_instance:Process_update_elastic_data_paths_schema):
-#     """
-#     """
-#     updated_meta_data = updated_instance.dict()
-#     result = update_process_meta_data(**updated_meta_data)
-#     if not result:
-#         raise HTTPException(status_code=404, detail="Processes not found")
-#     return {"result": result}
+@crud_router.post("/CRUD/update/process_elastic_data_paths/", tags=["Specific Process Update Operations"])
+async def update_process_data_elastic_data_paths(updated_instance:Process_update_elastic_data_paths_schema):
+    """
+    Endpoint to update process elastic data paths.
+
+    **Parameters:**
+    - **updated_instance**: An instance of Process_update_elastic_data_paths_schema containing the updated elastic data paths.
+
+    **Returns:**
+    - A result indicating the success of the update, otherwise raises a 404 HTTP exception.
+    """
+    updated_elastic_data_paths = updated_instance.dict()
+    result = update_process_elastic_data_paths(**updated_elastic_data_paths)
+    if not result:
+        raise HTTPException(status_code=404, detail="Processes not found")
+    return {"result": result}
+
+@crud_router.post("/CRUD/update/process_file_location_type/", tags=["Specific Process Update Operations"])
+async def update_process_data_file_location_type(updated_instance:Process_update_file_location_type_schema):
+    """
+    Endpoint to update process file location type.
+
+    **Parameters:**
+    - **updated_instance**: An instance of Process_update_file_location_type_schema containing the updated file location type.
+
+    **Returns:**
+    - A result indicating the success of the update, otherwise raises a 404 HTTP exception.
+    """
+    updated_file_location_type = updated_instance.dict()
+    result = update_process_file_location_type(**updated_file_location_type)
+    if not result:
+        raise HTTPException(status_code=404, detail="Processes not found")
+    return {"result": result}
 
 
