@@ -109,6 +109,12 @@ def pull_process_id(ID:str):
 		return result
 
 def pull_processes_parent_graph(parent_graph:str):
+	"""
+	Pull all process documents that derive from the parent graph.
+
+	:param data_key: The ID to the parent graph.
+	:return: A list of process documents that contain the specified parent.
+	"""
 	result = list(process_collection.find({"parent_graph" : parent_graph}))
 	if result:
 		return result
