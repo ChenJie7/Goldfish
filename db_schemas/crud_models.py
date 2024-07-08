@@ -101,3 +101,18 @@ class Graph_update_meta_data_schema(BaseModel):
     """
     update_id: str
     process_meta_data: Dict[str, Any]
+
+class Graph_update_process_list_order(BaseModel):
+    """
+    Pydantic model for updating the order of the process lists.
+
+    Attributes:
+        update_id (str): updated process list in the new order containing 
+        all values from the original list.
+        process_meta_data (Dict[str, Any]): Metadata associated with the process.
+    """
+    update_id: str
+    process_list: List[str]
+
+
+

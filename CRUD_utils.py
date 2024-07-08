@@ -48,6 +48,20 @@ db = client.Goldfish
 graph_collection = db.graph_map
 process_collection = db.process_step
 
+# Create Graph Data 
+
+def create_graph_document(new_graph_dict:dict):
+	"""
+	Create a dictionary in new graph_map.
+
+	:new_graph_dict: dictionary containing document info.
+	:return: The produced graph echoed back.
+	"""
+	result = graph_collection.insert_one(new_graph_dict)
+
+	if result.inserted_id:
+		created_graph_map = pull_graph_id(result.inserted_id)
+		return created_graph_map
 
 # Read Graph Data 
 
@@ -124,7 +138,7 @@ def update_graph_process_meta_data(update_id:str, process_meta_data:dict):
 	:return: A message indicating the outcome of the update operation.
 	"""
 	# generate timestamp
-	time_stamp = datetime.now()
+	time_stamp = datetime.utcnow()
 
 	# update database
 	result = graph_collection.update_one(
@@ -147,7 +161,7 @@ def update_graph_project_name(update_id:str, project_name:str):
 	:return: A message indicating the outcome of the update operation.
 	"""
 	# generate timestamp
-	time_stamp = datetime.now()
+	time_stamp = datetime.utcnow()
 
 	# update database
 	result = graph_collection.update_one(
@@ -170,7 +184,7 @@ def update_graph_owner_email(update_id:str, owner_email:str):
 	:return: A message indicating the outcome of the update operation.
 	"""
 	# generate timestamp
-	time_stamp = datetime.now()
+	time_stamp = datetime.utcnow()
 
 	# update database
 	result = graph_collection.update_one(
@@ -193,7 +207,7 @@ def update_graph_owner(update_id:str, owner:str):
 	:return: A message indicating the outcome of the update operation.
 	"""
 	# generate timestamp
-	time_stamp = datetime.now()
+	time_stamp = datetime.utcnow()
 
 	# update database
 	result = graph_collection.update_one(
@@ -206,6 +220,35 @@ def update_graph_owner(update_id:str, owner:str):
 
 	if result.modified_count > 0:
 		return f"item '{update_id}' modified with supplied meta data"
+
+def update_graph_process_list_order(update_id:str, process_list:str):
+	"""
+	Update the order of the process list in a graph document.
+
+	:param update_id: The unique identifier of the graph document to update.
+	:param process_list: The new order of the process list to update in the graph document.
+	:return: A message indicating the outcome of the update operation.
+	"""
+	# pull refence graph data
+	reference_graph_data = pull_graph_id(update_id)
+
+	# check to ensure graph data exists and that the data matches
+	if reference_graph_data:
+		if sorted(reference_graph_data["process_list"]) == sorted(process_list):
+			# generate timestamp
+			time_stamp = datetime.utcnow() 
+
+			# update database
+			result = graph_collection.update_one(
+					{"_id":update_id}, 
+					{'$set': {
+						"process_list":process_list,
+						"date_updated":time_stamp
+					}}
+				)
+
+			if result.modified_count > 0:
+				return f"item '{update_id}' modified with supplied meta data"
 
 
 # Delete Graph Data 
@@ -230,8 +273,53 @@ def delete_graph(id:str):
 		return f"item '{id}' and all associated processes deleted"
 
 
-# Create Graph Data 
 
+# Create Process Data 
+
+def create_process_document(new_process_dict:dict, list_insert_location=None):
+	"""
+	Create a new process document in the collection and add the document
+	to the process list in the parent graph. If list_insert_location
+	is specified it inserts the process into the process_list at that point
+	otherwise it simply appends
+
+	:new_process_dict: dictionary containing document info.
+	:list_insert_location: integer if specifing location, none if simply appending
+	:return: The produced process echoed back otherwise nothing.
+	"""
+	# validate that parent exists and pull data
+	parent_id = new_process_dict["parent_graph"]
+	parent_result = pull_graph_id(parent_id)
+
+	if parent_result:
+		# add data to the stack
+		result = process_collection.insert_one(new_process_dict)
+
+		# check that worked properly
+		if result.inserted_id:
+			# generate timestamp
+			time_stamp = datetime.utcnow()
+
+			# isolate and update parent process list to reflect new child process
+			process_list = parent_result["process_list"]
+			if not list_insert_location or (type(list_insert_location) != int):
+				process_list.append(new_process_dict["_id"])
+			else:
+				process_list.insert(list_insert_location, new_process_dict["_id"])
+
+			process_append_result = graph_collection.update_one(
+						{"_id":parent_id}, 
+						{'$set': {
+							"process_list":process_list,
+							"date_updated":time_stamp
+						}}
+					)
+
+			# validate that this worked
+			if process_append_result.modified_count > 0:
+				# query new data entered and echo back to user
+				created_process_map = pull_process_id(result.inserted_id)
+				return created_process_map
 
 # Read Process Data 
 
@@ -314,7 +402,7 @@ def update_process_meta_data(update_id:str, meta_data:dict):
 	:return: A message indicating the outcome of the update operation.
 	"""
 	# generate timestamp
-	time_stamp = datetime.now()
+	time_stamp = datetime.utcnow()
 
 	# update database
 	result = process_collection.update_one(
@@ -337,7 +425,7 @@ def update_process_elastic_data_paths(update_id:str, elastic_data_paths:dict):
 	:return: A message indicating the outcome of the update operation.
 	"""
 	# generate timestamp
-	time_stamp = datetime.now()
+	time_stamp = datetime.utcnow()
 
 	# update database
 	result = process_collection.update_one(
@@ -360,7 +448,7 @@ def update_process_file_location_type(update_id:str, file_location_type:str):
 	:return: A message indicating the outcome of the update operation.
 	"""
 	# generate timestamp
-	time_stamp = datetime.now()
+	time_stamp = datetime.utcnow()
 
 	# update database
 	result = process_collection.update_one(
@@ -385,7 +473,7 @@ def delete_process(id:str):
 	:return: A message indicating the outcome of the deletion operation.
 	"""
 	# generate timestamp
-	time_stamp = datetime.now()
+	time_stamp = datetime.utcnow()
 
 	# find parent list and remove this id from parent if it exists
 	process_data = pull_process_id(id)
@@ -401,9 +489,9 @@ def delete_process(id:str):
 				}}
 			)
 
-	result = process_collection.delete_one({"_id" : f"{id}"})
-	if result.deleted_count > 0 and list_modified_result.modified_count > 0:
-		return f"item '{id}' deleted"
+		result = process_collection.delete_one({"_id" : f"{id}"})
+		if result.deleted_count > 0 and list_modified_result.modified_count > 0:
+			return f"item '{id}' deleted"
 
 def delete_all_from_parent_graph(parent_graph:str):
 	"""
@@ -415,12 +503,6 @@ def delete_all_from_parent_graph(parent_graph:str):
 	result = process_collection.delete_many({"parent_graph" : f"{parent_graph}"})
 	if result.deleted_count > 0:
 		return f"items under '{parent_graph}' graph deleted"
-
-
-# Create Process Data 
-
-
-
 
 
 

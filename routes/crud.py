@@ -27,6 +27,8 @@ import json
 
 from crud_models import *
 
+import uuid
+
 crud_router = APIRouter()
 
 @crud_router.post("/CRUD/read/graph_instance/", tags=["General Graph Read Operations"])
@@ -316,6 +318,13 @@ async def update_process_data_elastic_data_paths(updated_instance:Process_update
 @crud_router.post("/CRUD/update/graph_process_meta_data/", tags=["Specific Graph Update Operations"])
 async def update_graph_data_process_meta_data(updated_instance:Graph_update_meta_data_schema):
     """
+    Endpoint to update graph process meta data.
+
+    **Parameters:**
+    - **updated_instance**: An instance of Graph_update_meta_data_schema containing the updated meta data.
+
+    **Returns:**
+    - A result indicating the success of the update, otherwise raises a 404 HTTP exception.
     """
     updated_process_meta_data = updated_instance.dict()
     result = update_graph_process_meta_data(**updated_process_meta_data)
@@ -326,6 +335,13 @@ async def update_graph_data_process_meta_data(updated_instance:Graph_update_meta
 @crud_router.post("/CRUD/update/graph_project_name/", tags=["Specific Graph Update Operations"])
 async def update_graph_data_project_name(updated_instance:Graph_update_project_name_schema):
     """
+    Endpoint to update graph project name.
+
+    **Parameters:**
+    - **updated_instance**: An instance of Graph_update_project_name_schema containing the updated project name.
+
+    **Returns:**
+    - A result indicating the success of the update, otherwise raises a 404 HTTP exception.
     """
     updated_project_name = updated_instance.dict()
     result = update_graph_project_name(**updated_project_name)
@@ -336,6 +352,13 @@ async def update_graph_data_project_name(updated_instance:Graph_update_project_n
 @crud_router.post("/CRUD/update/graph_owner_email/", tags=["Specific Graph Update Operations"])
 async def update_graph_data_owner_email(updated_instance:Graph_update_owner_email_schema):
     """
+    Endpoint to update graph owner email.
+
+    **Parameters:**
+    - **updated_instance**: An instance of Graph_update_owner_email_schema containing the updated owner email.
+
+    **Returns:**
+    - A result indicating the success of the update, otherwise raises a 404 HTTP exception.
     """
     updated_owner_email = updated_instance.dict()
     result = update_graph_owner_email(**updated_owner_email)
@@ -346,6 +369,13 @@ async def update_graph_data_owner_email(updated_instance:Graph_update_owner_emai
 @crud_router.post("/CRUD/update/graph_owner/", tags=["Specific Graph Update Operations"])
 async def update_graph_data_owner(updated_instance:Graph_update_owner_schema):
     """
+    Endpoint to update graph owner.
+
+    **Parameters:**
+    - **updated_instance**: An instance of Graph_update_owner_schema containing the updated owner information.
+
+    **Returns:**
+    - A result indicating the success of the update, otherwise raises a 404 HTTP exception.
     """
     updated_owner = updated_instance.dict()
     result = update_graph_owner(**updated_owner)
@@ -353,5 +383,65 @@ async def update_graph_data_owner(updated_instance:Graph_update_owner_schema):
         raise HTTPException(status_code=404, detail="Processes not found")
     return {"result": result}
 
+@crud_router.post("/CRUD/update/process_list_order/", tags=["Specific Graph Update Operations"])
+async def update_graph_data_process_list_order(updated_instance:Graph_update_process_list_order):
+    """
+    Endpoint to update graph process list order.
+    Please note that supplied values should contain all of the instances
+    currently in the process list, just in a different order
+
+    **Parameters:**
+    - **updated_instance**: An instance of Graph_update_owner_schema containing the updated list order.
+
+    **Returns:**
+    - A result indicating the success of the update, otherwise raises a 404 HTTP exception.
+    """
+    updated_process_list = updated_instance.dict()
+    result = update_graph_process_list_order(**updated_process_list)
+    if not result:
+        raise HTTPException(status_code=404, detail="Processes not found")
+    return {"result": result}
+
+@crud_router.post("/CRUD/create/graph/", tags=["Graph Create Operations"])
+async def create_graph(new_graph:GraphMap):
+    """
+    Endpoint to create a new graph document.
+
+    **Parameters:**
+    - **new_graph**: An instance of GraphMap containing the graph document data.
+
+    **Returns:**
+    - A result indicating the success of the graph creation, otherwise raises a 404 HTTP exception.
+    """
+    new_graph_dict = new_graph.dict()
+
+    # Generate internal _id
+    new_graph_dict["_id"] = str(uuid.uuid4())
+    result = create_graph_document(new_graph_dict)
+    if not result:
+        raise HTTPException(status_code=404, detail="Processes not found")
+    return {"result": result}
+
+@crud_router.post("/CRUD/create/process/", tags=["Process Create Operations"])
+async def create_process(new_process:ProcessStep, list_insert_location:int = None):
+    """
+    Endpoint to create a new process.
+
+    **Parameters:**
+    - **new_process**: An instance of ProcessStep containing the process data.
+    - **list_insert_location**: Optional parameter indicating the location to 
+                                insert the new process in the parent list.
+
+    **Returns:**
+    - A result indicating the success of the process creation, otherwise raises a 404 HTTP exception.
+    """
+    new_process_dict = new_process.dict()
+
+    # Generate internal _id
+    new_process_dict["_id"] = str(uuid.uuid4())
+    result = create_process_document(new_process_dict, list_insert_location=list_insert_location)
+    if not result:
+        raise HTTPException(status_code=404, detail="Processes not found")
+    return {"result": result}
 
 

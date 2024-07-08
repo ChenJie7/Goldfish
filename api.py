@@ -55,6 +55,14 @@ tags_metadata = [
     {
         "name": "Specific Graph Update Operations",
         "description": "Endpoints that update specfic graph documents",
+    },
+    {
+        "name": "Graph Create Operations",
+        "description": "Endpoints relating to creation of graph documents",
+    },
+    {
+        "name": "Process Create Operations",
+        "description": "Endpoints relating to creation of process documents",
     }
 ]
 docs_text = open('display_text.txt', 'r').read()
