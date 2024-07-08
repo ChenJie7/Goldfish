@@ -2,7 +2,7 @@
 -------------------------------------------------------------------
 This is a Goldfish Project File
 
-Authors: Max Witwer, Jie Chen, Elliot Cole
+Authors: Max Witwer, Jie Chen, Elliott Cole
 Collaboration with the Baker Lab
 
 This file was generated during an internship at the institute for

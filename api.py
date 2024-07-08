@@ -2,18 +2,15 @@
 -------------------------------------------------------------------
 This is a Goldfish Project File
 
-Authors: Max Witwer, Jie Chen, Elliot Cole
+Authors: Max Witwer, Jie Chen, Elliott Cole
 Collaboration with the Baker Lab
 
 This file was generated during an internship at the institute for
 protein design
 
 Description:
-This file contains all FastAPI endpoints that allow for querying 
-the database. It provides read operations for graph and process 
-collections within the MongoDB database, enabling CRUD functionality 
-via HTTP requests. The endpoints are categorized for better 
-documentation and ease of use.
+This is the main api file that links all routes together
+and sets up the swagger config
 
 Date: 07/06/2024
 -------------------------------------------------------------------
