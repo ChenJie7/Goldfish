@@ -114,6 +114,100 @@ def pull_graphs_email(email:str):
 		return result
 
 # Update Graph Data 
+
+def update_graph_process_meta_data(update_id:str, process_meta_data:dict):
+	"""
+	Update the process metadata of a graph document.
+
+	:param update_id: The unique identifier of the graph document to update.
+	:param process_meta_data: The process metadata to update in the graph document.
+	:return: A message indicating the outcome of the update operation.
+	"""
+	# generate timestamp
+	time_stamp = datetime.now()
+
+	# update database
+	result = graph_collection.update_one(
+			{"_id":update_id}, 
+			{'$set': {
+				"process_meta_data":process_meta_data,
+				"date_updated":time_stamp
+			}}
+		)
+
+	if result.modified_count > 0:
+		return f"item '{update_id}' modified with supplied meta data"
+
+def update_graph_project_name(update_id:str, project_name:str):
+	"""
+	Update the project name of a graph document.
+
+	:param update_id: The unique identifier of the graph document to update.
+	:param project_name: The new project name to update in the graph document.
+	:return: A message indicating the outcome of the update operation.
+	"""
+	# generate timestamp
+	time_stamp = datetime.now()
+
+	# update database
+	result = graph_collection.update_one(
+			{"_id":update_id}, 
+			{'$set': {
+				"project_name":project_name,
+				"date_updated":time_stamp
+			}}
+		)
+
+	if result.modified_count > 0:
+		return f"item '{update_id}' modified with supplied meta data"
+
+def update_graph_owner_email(update_id:str, owner_email:str):
+	"""
+	Update the owner email of a graph document.
+
+	:param update_id: The unique identifier of the graph document to update.
+	:param owner_email: The new owner email to update in the graph document.
+	:return: A message indicating the outcome of the update operation.
+	"""
+	# generate timestamp
+	time_stamp = datetime.now()
+
+	# update database
+	result = graph_collection.update_one(
+			{"_id":update_id}, 
+			{'$set': {
+				"owner_email":owner_email,
+				"date_updated":time_stamp
+			}}
+		)
+
+	if result.modified_count > 0:
+		return f"item '{update_id}' modified with supplied meta data"
+
+def update_graph_owner(update_id:str, owner:str):
+	"""
+	Update the owner of a graph document.
+
+	:param update_id: The unique identifier of the graph document to update.
+	:param owner: The new owner to update in the graph document.
+	:return: A message indicating the outcome of the update operation.
+	"""
+	# generate timestamp
+	time_stamp = datetime.now()
+
+	# update database
+	result = graph_collection.update_one(
+			{"_id":update_id}, 
+			{'$set': {
+				"owner":owner,
+				"date_updated":time_stamp
+			}}
+		)
+
+	if result.modified_count > 0:
+		return f"item '{update_id}' modified with supplied meta data"
+
+
 # Delete Graph Data 
 
 def delete_graph(id:str):
@@ -257,7 +351,7 @@ def update_process_elastic_data_paths(update_id:str, elastic_data_paths:dict):
 	if result.modified_count > 0:
 		return f"item '{update_id}' modified with supplied meta data"
 
-def update_process_file_location_type(update_id:str, file_location_type:dict):
+def update_process_file_location_type(update_id:str, file_location_type:str):
 	"""
 	Update the file location type of a process document.
 
@@ -284,13 +378,31 @@ def update_process_file_location_type(update_id:str, file_location_type:dict):
 
 def delete_process(id:str):
 	"""
-	Delete a process document by its unique identifier.
+	Delete a process document by its unique identifier and remove it from
+	parent list
 
 	:param id: The unique identifier of the process document to delete.
 	:return: A message indicating the outcome of the deletion operation.
 	"""
+	# generate timestamp
+	time_stamp = datetime.now()
+
+	# find parent list and remove this id from parent if it exists
+	process_data = pull_process_id(id)
+	if process_data:
+		parent_graph_data = pull_graph_id(process_data["parent_graph"])
+		process_list = parent_graph_data["process_list"]
+		process_list.remove(id)
+		list_modified_result = graph_collection.update_one(
+				{"_id":process_data["parent_graph"]}, 
+				{'$set': {
+					"process_list":process_list,
+					"date_updated":time_stamp
+				}}
+			)
+
 	result = process_collection.delete_one({"_id" : f"{id}"})
-	if result.deleted_count > 0:
+	if result.deleted_count > 0 and list_modified_result.modified_count > 0:
 		return f"item '{id}' deleted"
 
 def delete_all_from_parent_graph(parent_graph:str):

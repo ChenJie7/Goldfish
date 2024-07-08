@@ -25,6 +25,8 @@ from fastapi import APIRouter, HTTPException
 from CRUD_utils import *
 import json
 
+from crud_models import *
+
 crud_router = APIRouter()
 
 @crud_router.post("/CRUD/read/graph_instance/", tags=["General Graph Read Operations"])
@@ -311,21 +313,45 @@ async def update_process_data_elastic_data_paths(updated_instance:Process_update
         raise HTTPException(status_code=404, detail="Processes not found")
     return {"result": result}
 
-@crud_router.post("/CRUD/update/process_file_location_type/", tags=["Specific Process Update Operations"])
-async def update_process_data_file_location_type(updated_instance:Process_update_file_location_type_schema):
+@crud_router.post("/CRUD/update/graph_process_meta_data/", tags=["Specific Graph Update Operations"])
+async def update_graph_data_process_meta_data(updated_instance:Graph_update_meta_data_schema):
     """
-    Endpoint to update process file location type.
-
-    **Parameters:**
-    - **updated_instance**: An instance of Process_update_file_location_type_schema containing the updated file location type.
-
-    **Returns:**
-    - A result indicating the success of the update, otherwise raises a 404 HTTP exception.
     """
-    updated_file_location_type = updated_instance.dict()
-    result = update_process_file_location_type(**updated_file_location_type)
+    updated_process_meta_data = updated_instance.dict()
+    result = update_graph_process_meta_data(**updated_process_meta_data)
     if not result:
         raise HTTPException(status_code=404, detail="Processes not found")
     return {"result": result}
+
+@crud_router.post("/CRUD/update/graph_project_name/", tags=["Specific Graph Update Operations"])
+async def update_graph_data_project_name(updated_instance:Graph_update_project_name_schema):
+    """
+    """
+    updated_project_name = updated_instance.dict()
+    result = update_graph_project_name(**updated_project_name)
+    if not result:
+        raise HTTPException(status_code=404, detail="Processes not found")
+    return {"result": result}
+
+@crud_router.post("/CRUD/update/graph_owner_email/", tags=["Specific Graph Update Operations"])
+async def update_graph_data_owner_email(updated_instance:Graph_update_owner_email_schema):
+    """
+    """
+    updated_owner_email = updated_instance.dict()
+    result = update_graph_owner_email(**updated_owner_email)
+    if not result:
+        raise HTTPException(status_code=404, detail="Processes not found")
+    return {"result": result}
+
+@crud_router.post("/CRUD/update/graph_owner/", tags=["Specific Graph Update Operations"])
+async def update_graph_data_owner(updated_instance:Graph_update_owner_schema):
+    """
+    """
+    updated_owner = updated_instance.dict()
+    result = update_graph_owner(**updated_owner)
+    if not result:
+        raise HTTPException(status_code=404, detail="Processes not found")
+    return {"result": result}
+
 
 

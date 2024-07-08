@@ -50,6 +50,10 @@ tags_metadata = [
     },
     {
         "name": "Specific Process Update Operations",
+        "description": "Endpoints that update specfic process documents",
+    },
+    {
+        "name": "Specific Graph Update Operations",
         "description": "Endpoints that update specfic graph documents",
     }
 ]
