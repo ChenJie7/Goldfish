@@ -61,7 +61,7 @@ docs_text = open('display_text.txt', 'r').read()
 
 # generate app instance
 app = FastAPI(
-    title="Goldfish Doumentation",
+    title="Goldfish Documentation",
     description=docs_text,
     version="1.0.0",
     openapi_tags=tags_metadata
